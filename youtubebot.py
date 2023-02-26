@@ -129,8 +129,9 @@ def after_track(error, connection, server_id):
     try: path = queues[server_id].pop(0)[0]
     except KeyError: return # probably got disconnected
     if path not in [i[0] for i in queues[server_id]]: # check that the same video isn't queued multiple times
-        try: os.remove(path)
-        except FileNotFoundError: pass
+        # try: os.remove(path)
+        # except FileNotFoundError: pass
+        pass
     try: connection.play(discord.FFmpegOpusAudio(queues[server_id][0][0]), after=lambda error=None, connection=connection, server_id=server_id:
                                                                           after_track(error, connection, server_id))
     except IndexError: # that was the last item in queue
