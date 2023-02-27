@@ -34,7 +34,19 @@ def main():
     except discord.PrivilegedIntentsRequired as error:
         return error
 
-@bot.command(name='queue', aliases=['q'])
+# @bot.command(name='help', aliases=['h', 'pomoz'])
+# async def help(ctx: commands.Context, *args):
+#     await ctx.send('gówno')
+
+@bot.command(name='disconnect', aliases=['d', 'wypierdalaj'])
+async def disonnect(ctx: commands.Context, *args):
+    voice_state = ctx.author.voice
+    try: connection = await voice_state.channel.connect()
+    except: return
+    asyncio.run_coroutine_threadsafe(safe_disconnect(connection), bot.loop).result()
+
+
+@bot.command(name='queue', aliases=['q', 'listuj', 'co_leci'])
 async def queue(ctx: commands.Context, *args):
     try: queue = queues[ctx.guild.id]
     except KeyError: queue = None
@@ -49,7 +61,7 @@ async def queue(ctx: commands.Context, *args):
     if not await sense_checks(ctx):
         return
 
-@bot.command(name='skip', aliases=['s'])
+@bot.command(name='skip', aliases=['s', 'skipnij'])
 async def skip(ctx: commands.Context, *args):
     try: queue_length = len(queues[ctx.guild.id])
     except KeyError: queue_length = 0
@@ -78,7 +90,7 @@ async def skip(ctx: commands.Context, *args):
         queues[ctx.guild.id].pop(0)
     voice_client.stop()
 
-@bot.command(name='play', aliases=['p'])
+@bot.command(name='play', aliases=['p', 'pusc'])
 async def play(ctx: commands.Context, *args):
     voice_state = ctx.author.voice
     if not await sense_checks(ctx, voice_state=voice_state):
